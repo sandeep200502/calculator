@@ -3,12 +3,23 @@ let historyDropdown = document.getElementById('history');
 let historyList = [];
 
 function appendNumber(num) {
-  if (display.innerText === '0') display.innerText = num;
-  else display.innerText += num;
+  if (display.innerText === '0') display.innerText = '';
+  display.innerText += num;
 }
 
 function appendOperator(op) {
+  let lastChar = display.innerText.slice(-1);
+  if (['+', '-', '*', '/'].includes(lastChar)) {
+    display.innerText = display.innerText.slice(0, -1);
+  }
   display.innerText += op;
+}
+
+function appendBracket(bracket) {
+  if (display.innerText === '0' && bracket === '(') {
+    display.innerText = '';
+  }
+  display.innerText += bracket;
 }
 
 function clearDisplay() {
@@ -16,7 +27,11 @@ function clearDisplay() {
 }
 
 function backspace() {
-  display.innerText = display.innerText.slice(0, -1) || '0';
+  if (display.innerText.length === 1) {
+    display.innerText = '0';
+  } else {
+    display.innerText = display.innerText.slice(0, -1);
+  }
 }
 
 function calculate() {
@@ -24,17 +39,19 @@ function calculate() {
     let expression = display.innerText;
     let result = eval(expression);
     display.innerText = result;
-
-    // Save to history
-    historyList.push(`${expression} = ${result}`);
-    updateHistoryDropdown();
+    addToHistory(expression + " = " + result);
   } catch (err) {
     display.innerText = 'Error';
   }
 }
 
+function addToHistory(entry) {
+  historyList.push(entry);
+  updateHistoryDropdown();
+}
+
 function updateHistoryDropdown() {
-  historyDropdown.innerHTML = '<option value="">Select a calculation</option>';
+  historyDropdown.innerHTML = '<option value="">History</option>';
   historyList.forEach((item, index) => {
     let option = document.createElement('option');
     option.value = index;
@@ -46,19 +63,24 @@ function updateHistoryDropdown() {
 function loadHistory() {
   let selectedIndex = historyDropdown.value;
   if (selectedIndex !== "") {
-    display.innerText = historyList[selectedIndex].split(' = ')[0];
+    let selectedHistory = historyList[selectedIndex];
+    display.innerText = selectedHistory.split(' = ')[0];
   }
 }
 
-// Keyboard support
+// Keyboard Input
 document.addEventListener('keydown', function(event) {
   if (!isNaN(event.key)) {
     appendNumber(event.key);
-  } else if (['+', '-', '*', '/', '.', '(', ')'].includes(event.key)) {
+  } else if (['+', '-', '*', '/'].includes(event.key)) {
     appendOperator(event.key);
-  } else if (event.key === 'Enter' || event.key === '=') {
-    calculate();
+  } else if (event.key === '(' || event.key === ')') {
+    appendBracket(event.key);
   } else if (event.key === 'Backspace') {
     backspace();
+  } else if (event.key === 'Enter' || event.key === '=') {
+    calculate();
+  } else if (event.key === '.') {
+    appendNumber('.');
   }
 });
