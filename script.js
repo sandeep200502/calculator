@@ -1,5 +1,6 @@
 let display = document.getElementById('display');
-let currentInput = '';
+let historyDropdown = document.getElementById('history');
+let historyList = [];
 
 function appendNumber(num) {
   if (display.innerText === '0') display.innerText = num;
@@ -8,10 +9,6 @@ function appendNumber(num) {
 
 function appendOperator(op) {
   display.innerText += op;
-}
-
-function appendFunction(func) {
-  display.innerText += func;
 }
 
 function clearDisplay() {
@@ -24,34 +21,32 @@ function backspace() {
 
 function calculate() {
   try {
-    display.innerText = eval(display.innerText);
+    let expression = display.innerText;
+    let result = eval(expression);
+    display.innerText = result;
+
+    // Save to history
+    historyList.push(`${expression} = ${result}`);
+    updateHistoryDropdown();
   } catch (err) {
     display.innerText = 'Error';
   }
 }
 
-function convertValue() {
-  let conversionType = document.getElementById('conversion').value;
-  let value = parseFloat(display.innerText);
-  
-  if (isNaN(value)) {
-    display.innerText = 'Error';
-    return;
-  }
+function updateHistoryDropdown() {
+  historyDropdown.innerHTML = '<option value="">Select a calculation</option>';
+  historyList.forEach((item, index) => {
+    let option = document.createElement('option');
+    option.value = index;
+    option.text = item;
+    historyDropdown.appendChild(option);
+  });
+}
 
-  switch(conversionType) {
-    case 'CtoF':
-      display.innerText = (value * 9/5) + 32;
-      break;
-    case 'FtoC':
-      display.innerText = (value - 32) * 5/9;
-      break;
-    case 'kmToMiles':
-      display.innerText = (value * 0.621371).toFixed(5);
-      break;
-    case 'milesToKm':
-      display.innerText = (value / 0.621371).toFixed(5);
-      break;
+function loadHistory() {
+  let selectedIndex = historyDropdown.value;
+  if (selectedIndex !== "") {
+    display.innerText = historyList[selectedIndex].split(' = ')[0];
   }
 }
 
