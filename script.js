@@ -1,17 +1,17 @@
 let display = document.getElementById('display');
-let extraOptions = document.getElementById('extra-options');
 let currentInput = '';
 
-function appendNumber(number) {
-  if (display.innerText === '0') {
-    display.innerText = number;
-  } else {
-    display.innerText += number;
-  }
+function appendNumber(num) {
+  if (display.innerText === '0') display.innerText = num;
+  else display.innerText += num;
 }
 
-function appendOperator(operator) {
-  display.innerText += operator;
+function appendOperator(op) {
+  display.innerText += op;
+}
+
+function appendFunction(func) {
+  display.innerText += func;
 }
 
 function clearDisplay() {
@@ -25,29 +25,45 @@ function backspace() {
 function calculate() {
   try {
     display.innerText = eval(display.innerText);
-  } catch (error) {
+  } catch (err) {
     display.innerText = 'Error';
   }
 }
 
-function toggleScientific() {
-  extraOptions.classList.toggle('hidden');
-}
-
-function convertOptions() {
-  extraOptions.classList.remove('hidden');
-}
-
-function convert(type) {
+function convertValue() {
+  let conversionType = document.getElementById('conversion').value;
   let value = parseFloat(display.innerText);
+  
   if (isNaN(value)) {
     display.innerText = 'Error';
     return;
   }
 
-  if (type === 'CtoF') {
-    display.innerText = (value * 9/5) + 32;
-  } else if (type === 'kmToMiles') {
-    display.innerText = (value * 0.621371).toFixed(5);
+  switch(conversionType) {
+    case 'CtoF':
+      display.innerText = (value * 9/5) + 32;
+      break;
+    case 'FtoC':
+      display.innerText = (value - 32) * 5/9;
+      break;
+    case 'kmToMiles':
+      display.innerText = (value * 0.621371).toFixed(5);
+      break;
+    case 'milesToKm':
+      display.innerText = (value / 0.621371).toFixed(5);
+      break;
   }
 }
+
+// Keyboard support
+document.addEventListener('keydown', function(event) {
+  if (!isNaN(event.key)) {
+    appendNumber(event.key);
+  } else if (['+', '-', '*', '/', '.', '(', ')'].includes(event.key)) {
+    appendOperator(event.key);
+  } else if (event.key === 'Enter' || event.key === '=') {
+    calculate();
+  } else if (event.key === 'Backspace') {
+    backspace();
+  }
+});
