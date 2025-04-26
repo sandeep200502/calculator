@@ -2,15 +2,22 @@ let display = document.getElementById('display');
 let historyDropdown = document.getElementById('history');
 let historyList = [];
 let pendingCloseBracket = false;
+let openBracketCount = 0;
+let closeBracketCount = 0;
+
+function updateBracketCounter() {
+  document.getElementById('open-count').innerText = `Opened: ${openBracketCount}`;
+  document.getElementById('close-count').innerText = `Closed: ${closeBracketCount}`;
+}
 
 function appendNumber(num) {
+  if (display.innerText === '0') display.innerText = '';
   handleImplicitMultiplication();
-  if (display.innerText === '0') display.innerText = num;
-  else display.innerText += num;
+  display.innerText += num;
 }
 
 function appendOperator(op) {
-  if (display.innerText === '0' && op !== '(') return; // ignore operator first
+  if (display.innerText === '0') return;
 
   let lastChar = display.innerText.slice(-1);
 
@@ -25,35 +32,73 @@ function appendOperator(op) {
 function appendBracket(bracket) {
   if (bracket === '(') {
     if (display.innerText === '0') display.innerText = '';
-    handleImplicitMultiplication();
-    display.innerHTML += `<span class="open-bracket">(</span><span id="pending-bracket" class="pending-bracket">)</span>`;
+    let lastChar = display.innerText.slice(-1);
+
+    // If last is a number or ), insert multiplication before (
+    if (!isNaN(lastChar) || lastChar === ')') {
+      display.innerText += '*';
+    }
+
+    display.innerText += '(';
     pendingCloseBracket = true;
+    openBracketCount++;
+    updateBracketCounter();
   } else if (bracket === ')' && pendingCloseBracket) {
     confirmPendingBracket();
   }
 }
 
 function confirmPendingBracket() {
-  const pending = document.getElementById('pending-bracket');
-  if (pending) {
-    pending.id = '';
-    pending.classList.remove('pending-bracket');
+  let openBrackets = (display.innerText.match(/\(/g) || []).length;
+  let closeBrackets = (display.innerText.match(/\)/g) || []).length;
+
+  if (openBrackets > closeBrackets) {
+    display.innerText += ')';
+    closeBracketCount++;
+    updateBracketCounter();
+    pendingCloseBracket = false;
   }
-  pendingCloseBracket = false;
 }
 
 function clearDisplay() {
   display.innerText = '0';
   pendingCloseBracket = false;
+  openBracketCount = 0;
+  closeBracketCount = 0;
+  updateBracketCounter();
 }
 
 function backspace() {
-  display.innerHTML = display.innerHTML.slice(0, -1);
+  if (display.innerText.length === 1) {
+    clearDisplay();
+    return;
+  }
+  
+  let lastChar = display.innerText.slice(-1);
+
+  if (lastChar === '(') {
+    openBracketCount--;
+  } else if (lastChar === ')') {
+    closeBracketCount--;
+  }
+  
+  display.innerText = display.innerText.slice(0, -1);
+  updateBracketCounter();
 }
 
 function calculate() {
   try {
-    let expression = display.innerText.replace(/[^-()\d/*+.]/g, '');
+    let expression = display.innerText;
+
+    // Ensure brackets are balanced
+    let openBrackets = (expression.match(/\(/g) || []).length;
+    let closeBrackets = (expression.match(/\)/g) || []).length;
+
+    if (openBrackets !== closeBrackets) {
+      alert("Mismatch in brackets!");
+      return;
+    }
+
     let result = eval(expression);
     display.innerText = result;
 
@@ -82,10 +127,9 @@ function loadHistory() {
   }
 }
 
-// Handle implicit multiplication
 function handleImplicitMultiplication() {
   let lastChar = display.innerText.slice(-1);
-  if (lastChar === ')' || lastChar === '(' || !isNaN(lastChar)) {
+  if (lastChar === ')' || (!isNaN(lastChar) && lastChar !== '')) {
     appendOperator('*');
   }
 }
