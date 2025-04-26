@@ -3,56 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Scientific Calculator</title>
+  <title>Advanced Scientific Calculator</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="calculator">
-    <div class="display" id="display">0</div>
+  <div class="container">
+    <div class="calculator">
+      <div class="display" id="display">0</div>
 
-    <div class="buttons">
-      <!-- Row 1 -->
-      <button class="btn" onclick="clearDisplay()">C</button>
-      <button class="btn" onclick="backspace()">⌫</button>
-      <button class="btn" onclick="toggleScientific()">Sci</button>
-      <button class="btn operator" onclick="appendOperator('/')">÷</button>
+      <div class="buttons">
+        <!-- Top row -->
+        <button class="btn" onclick="clearDisplay()">C</button>
+        <button class="btn" onclick="backspace()">⌫</button>
+        <button class="btn" onclick="appendOperator('(')">(</button>
+        <button class="btn" onclick="appendOperator(')')">)</button>
 
-      <!-- Row 2 -->
-      <button class="btn" onclick="appendNumber('7')">7</button>
-      <button class="btn" onclick="appendNumber('8')">8</button>
-      <button class="btn" onclick="appendNumber('9')">9</button>
-      <button class="btn operator" onclick="appendOperator('*')">×</button>
+        <!-- Scientific functions -->
+        <button class="btn" onclick="appendFunction('Math.sin(')">sin</button>
+        <button class="btn" onclick="appendFunction('Math.cos(')">cos</button>
+        <button class="btn" onclick="appendFunction('Math.tan(')">tan</button>
+        <button class="btn operator" onclick="appendOperator('/')">÷</button>
 
-      <!-- Row 3 -->
-      <button class="btn" onclick="appendNumber('4')">4</button>
-      <button class="btn" onclick="appendNumber('5')">5</button>
-      <button class="btn" onclick="appendNumber('6')">6</button>
-      <button class="btn operator" onclick="appendOperator('-')">−</button>
+        <button class="btn" onclick="appendFunction('Math.log10(')">log</button>
+        <button class="btn" onclick="appendFunction('Math.log(')">ln</button>
+        <button class="btn" onclick="appendFunction('Math.exp(')">eˣ</button>
+        <button class="btn operator" onclick="appendOperator('*')">×</button>
 
-      <!-- Row 4 -->
-      <button class="btn" onclick="appendNumber('1')">1</button>
-      <button class="btn" onclick="appendNumber('2')">2</button>
-      <button class="btn" onclick="appendNumber('3')">3</button>
-      <button class="btn operator" onclick="appendOperator('+')">+</button>
+        <!-- Number buttons -->
+        <button class="btn" onclick="appendNumber('7')">7</button>
+        <button class="btn" onclick="appendNumber('8')">8</button>
+        <button class="btn" onclick="appendNumber('9')">9</button>
+        <button class="btn operator" onclick="appendOperator('-')">−</button>
 
-      <!-- Row 5 -->
-      <button class="btn" onclick="appendNumber('0')">0</button>
-      <button class="btn" onclick="appendNumber('.')">.</button>
-      <button class="btn" onclick="convertOptions()">Conv</button>
-      <button class="btn equals" onclick="calculate()">=</button>
+        <button class="btn" onclick="appendNumber('4')">4</button>
+        <button class="btn" onclick="appendNumber('5')">5</button>
+        <button class="btn" onclick="appendNumber('6')">6</button>
+        <button class="btn operator" onclick="appendOperator('+')">+</button>
+
+        <button class="btn" onclick="appendNumber('1')">1</button>
+        <button class="btn" onclick="appendNumber('2')">2</button>
+        <button class="btn" onclick="appendNumber('3')">3</button>
+        <button class="btn" onclick="appendOperator('**')">xʸ</button>
+
+        <button class="btn" onclick="appendNumber('0')">0</button>
+        <button class="btn" onclick="appendNumber('.')">.</button>
+        <button class="btn" onclick="appendOperator('**2')">x²</button>
+        <button class="btn equals" onclick="calculate()">=</button>
+      </div>
     </div>
 
-    <!-- Scientific functions and conversions -->
-    <div id="extra-options" class="hidden">
-      <h3>Scientific Notations</h3>
-      <button class="btn" onclick="appendOperator('**2')">x²</button>
-      <button class="btn" onclick="appendOperator('**0.5')">√x</button>
-      <button class="btn" onclick="appendOperator('**3')">x³</button>
-
-      <h3>Conversions</h3>
-      <button class="btn" onclick="convert('CtoF')">°C ➔ °F</button>
-      <button class="btn" onclick="convert('kmToMiles')">Km ➔ Miles</button>
+    <!-- Dropdown for conversions -->
+    <div class="conversion-section">
+      <label for="conversion">Conversions:</label>
+      <select id="conversion" onchange="convertValue()">
+        <option value="">Select</option>
+        <option value="CtoF">Celsius ➔ Fahrenheit</option>
+        <option value="FtoC">Fahrenheit ➔ Celsius</option>
+        <option value="kmToMiles">Kilometers ➔ Miles</option>
+        <option value="milesToKm">Miles ➔ Kilometers</option>
+      </select>
     </div>
   </div>
 
