@@ -48,7 +48,9 @@ Touch-friendly enhancements for mobile devices
 Highlight syntax errors like unmatched brackets visually
 
 📸 Screenshot Preview
+
 <img width="356" alt="Screenshot 2025-04-26 at 21 17 27" src="https://github.com/user-attachments/assets/dbb23366-3af4-45f0-8bca-ede75a29c126" />
+
 
 Made with ❤️ by Sandeep Raj Saravanan
 
