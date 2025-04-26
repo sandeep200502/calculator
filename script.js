@@ -4,11 +4,6 @@ let historyList = [];
 
 function appendNumber(num) {
   if (display.innerText === '0') display.innerText = '';
-  let lastChar = display.innerText.slice(-1);
-  // If last character is ')' then insert '*' before number
-  if (lastChar === ')') {
-    display.innerText += '*';
-  }
   display.innerText += num;
 }
 
@@ -24,18 +19,29 @@ function appendBracket(bracket) {
   if (display.innerText === '0' && bracket === '(') {
     display.innerText = '';
   }
+
   let lastChar = display.innerText.slice(-1);
+
   if (bracket === '(') {
-    if (!['+', '-', '*', '/', '('].includes(lastChar)) {
+    // if last char is number or ')', insert * before (
+    if (/\d/.test(lastChar) || lastChar === ')') {
       display.innerText += '*';
     }
+    display.innerText += '(';
   } else if (bracket === ')') {
-    if (['+', '-', '*', '/', '('].includes(lastChar)) {
-      // prevent wrong closing bracket after operator
-      return;
+    // only allow ) if there are unmatched (
+    if (countOpenBrackets() > countCloseBrackets() && !['+', '-', '*', '/', '('].includes(lastChar)) {
+      display.innerText += ')';
     }
   }
-  display.innerText += bracket;
+}
+
+function countOpenBrackets() {
+  return (display.innerText.match(/\(/g) || []).length;
+}
+
+function countCloseBrackets() {
+  return (display.innerText.match(/\)/g) || []).length;
 }
 
 function clearDisplay() {
