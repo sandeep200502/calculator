@@ -6,18 +6,25 @@
 
 body {
   height: 100vh;
+  background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #74ebd5, #acb6e5);
   font-family: 'Poppins', sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
 
 .calculator {
   background: white;
   border-radius: 20px;
-  padding: 20px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  padding: 20px;
   width: 320px;
 }
 
@@ -28,7 +35,7 @@ body {
   text-align: right;
   padding: 20px;
   border-radius: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   overflow-x: auto;
 }
 
@@ -43,12 +50,13 @@ body {
   font-size: 1.2rem;
   background: #f0f0f0;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.2s ease;
 }
 
 .btn:hover {
+  transform: scale(1.1);
   background: #dcdcdc;
 }
 
@@ -60,19 +68,20 @@ body {
 .equals {
   background: #34c759;
   color: white;
-  grid-column: span 1;
 }
 
-.hidden {
-  display: none;
-  margin-top: 15px;
+.conversion-section {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-#extra-options {
-  margin-top: 20px;
-}
-
-h3 {
-  margin: 10px 0;
-  color: #333;
+select {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-top: 5px;
+  width: 200px;
 }
