@@ -4,6 +4,11 @@ let historyList = [];
 
 function appendNumber(num) {
   if (display.innerText === '0') display.innerText = '';
+  let lastChar = display.innerText.slice(-1);
+  // If last character is ')' then insert '*' before number
+  if (lastChar === ')') {
+    display.innerText += '*';
+  }
   display.innerText += num;
 }
 
@@ -18,6 +23,17 @@ function appendOperator(op) {
 function appendBracket(bracket) {
   if (display.innerText === '0' && bracket === '(') {
     display.innerText = '';
+  }
+  let lastChar = display.innerText.slice(-1);
+  if (bracket === '(') {
+    if (!['+', '-', '*', '/', '('].includes(lastChar)) {
+      display.innerText += '*';
+    }
+  } else if (bracket === ')') {
+    if (['+', '-', '*', '/', '('].includes(lastChar)) {
+      // prevent wrong closing bracket after operator
+      return;
+    }
   }
   display.innerText += bracket;
 }
